@@ -2,6 +2,7 @@ import React from 'react';
 import Quote from '../pages/Quote';
 import Careers from '../pages/Careers';
 import { useLocation } from 'react-router-dom';
+import CotizacionForm from '../pages/Quote';
 
 const Footer: React.FC = () => {
   const location = useLocation();
@@ -30,7 +31,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="w-full md:w-3/5">
-            <Quote />
+            <CotizacionForm />
           </div>
         </div>
       </section>

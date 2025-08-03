@@ -1,131 +1,41 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
-import { supabase } from '../lib/supabase';
+import React, { useRef } from 'react';
+import emailjs from 'emailjs-com';
 
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-}
+const CotizacionForm = () => {
+  const formRef = useRef<HTMLFormElement>(null);
 
-const Quote = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const sendEmail = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    try {
-      const { error } = await supabase
-        .from('consultas')
-        .insert({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          message: data.message
-        });
+    if (!formRef.current) return;
 
-      if (error) throw error;
-
-      toast.success('¡Gracias por tu consulta! Te contactaremos a la brevedad.');
-      reset();
-    } catch (error) {
-      toast.error('Hubo un error al enviar el formulario. Por favor, intenta nuevamente.');
-      console.error('Error:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    emailjs.sendForm(
+      '0',    // ← Reemplazá con el ID de tu servicio (ej: service_gmail)
+      'template_kqs43hq',   // ← Reemplazá con el ID del template que creaste
+      formRef.current,
+      'KQnz8g33XZBRoK_aA'     // ← Reemplazá con tu public key (user ID)
+    )
+    .then(() => {
+      alert('Solicitud enviada correctamente');
+      formRef.current?.reset();
+    })
+    .catch((error) => {
+      console.error('Error al enviar la solicitud:', error);
+      alert('Hubo un problema. Intentá de nuevo.');
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b bg-white py-12">
-      <Toaster position="top-center" />
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto"
-        >
-          <h1 className="text-4xl font-bold text-primary text-center mb-6">Solicitá tu Presupuesto</h1>
-          <div className="bg-white p-8 rounded-xl shadow-lg">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Nombre y Apellido *
-                </label>
-                <input
-                  type="text"
-                  {...register('name', { required: true })}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                  disabled={isSubmitting}
-                />
-                {errors.name && (
-                  <span className="text-red-500 text-sm">Este campo es requerido</span>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                  disabled={isSubmitting}
-                />
-                {errors.email && (
-                  <span className="text-red-500 text-sm">Email inválido</span>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Teléfono *
-                </label>
-                <input
-                  type="tel"
-                  {...register('phone', { required: true })}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                  disabled={isSubmitting}
-                />
-                {errors.phone && (
-                  <span className="text-red-500 text-sm">Este campo es requerido</span>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Consulta *
-                </label>
-                <textarea
-                  {...register('message', { required: true })}
-                  rows={4}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                  disabled={isSubmitting}
-                ></textarea>
-                {errors.message && (
-                  <span className="text-red-500 text-sm">Este campo es requerido</span>
-                )}
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Enviando...' : 'Solicitar Presupuesto'}
-              </motion.button>
-            </form>
-          </div>
-        </motion.div>
-      </div>
-    </div>
+    <form ref={formRef} onSubmit={sendEmail} className="space-y-4 max-w-xl mx-auto">
+      <input name="nombre" type="text" placeholder="Nombre y apellido" required className="w-full border p-2 text-gray-700" />
+      <input name="gmail" type="email" placeholder="Correo electrónico" required className="w-full border p-2 text-gray-700" />
+      <input name="telefono" type="tel" placeholder="Teléfono" required className="w-full border p-2 text-gray-700" />
+      <textarea name="consulta" placeholder="Escriba su consulta aquí..." required className="w-full border p-2 h-32 text-gray-700" />
+      <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
+        Enviar solicitud
+      </button>
+    </form>
   );
 };
 
-export default Quote;
+export default CotizacionForm;
