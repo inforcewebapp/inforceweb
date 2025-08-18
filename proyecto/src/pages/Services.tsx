@@ -1,28 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Camera, Heart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const slides = [
+
+const mobileSlides = [
   {
-    image: '/slides/slide2.png',
-    buttonText: 'Conocé Más',
-    link: '/about'
+    image: '/slides/slide1_mobile.png',
+    buttonText: 'Más Información',
+    link: '/services',
+    targetId: 'serviciosinfo'
   },
+  {
+    image: '/slides/slide2_mobile.png',
+    buttonText: 'Conocé Más',
+    link: '/services',
+    targetId: 'serviciosinfo'
+  }
+];
+
+const desktopSlides = [
   {
     image: '/slides/slide1.png',
     buttonText: 'Más Información',
+    link: '/services'
+  },
+  {
+    image: '/slides/slide2.png',
+    buttonText: 'Conocé Más',
     link: '/services'
   }
 ];
 
 const Services = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const [current, setCurrent] = useState(0);
   const location = useLocation();
+  const isServicesPage = location.pathname === '/services';
+
+
+  useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  handleResize(); // Llamada inicial
+
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
+  const slides = isMobile ? mobileSlides : desktopSlides;
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  const isServicesPage = location.pathname === '/services';
 
   return (
     <div className="min-h-screen">
@@ -79,7 +110,7 @@ const Services = () => {
       </div>
 
       {/* SEGURIDAD FÍSICA Y ELECTRÓNICA */}
-      <section className="bg-white py-16 relative overflow-hidden">
+      <section id="serviciosinfo" className="bg-white py-16 relative overflow-hidden">
         <div className="flex justify-center mb-12">
           <h2
             className={`w-full max-w-screen-xl mx-auto py-2 text-xl font-bold uppercase text-center ${

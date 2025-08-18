@@ -23,8 +23,7 @@ const Footer: React.FC = () => {
           <div className="w-full md:w-2/5 flex flex-col items-center text-center gap-4">
             <div className={`text-lg font-medium ${isServicesPage ? 'text-[#2a3446]' : 'text-[#014fca]'}`}>
               <p className="font-bold text-2xl">Complete el formulario</p>
-              <p className="font-bold text-2xl">y escríbanos.</p>
-              <p className="font-bold text-2xl">En breve nos contactaremos</p>
+              <p className="font-bold text-2xl">y en breve nos contactaremos</p>
               <p className="font-bold text-2xl">con usted.</p>
             </div>
             <img src="/footer/consulta.png" alt="Consulta" className="w-full h-auto object-contain max-h-72" />
@@ -48,7 +47,7 @@ const Footer: React.FC = () => {
           <div className="w-full md:w-2/5 flex flex-col items-center text-center gap-4">
             <div className={`text-lg font-medium ${isServicesPage ? 'text-[#2a3446]' : 'text-[#014fca]'}`}>
               <p className="font-bold text-2xl">Completa el formulario</p>
-              <p className="font-bold text-2xl">y manda tu curriculum.</p>
+              <p className="font-bold text-2xl">y envia tu curriculum.</p>
               <p className="font-bold text-2xl">¡Sumate a nuestro equipo!</p>
             </div>
             <img src="/footer/foter2.png" alt="Trabaja con nosotros" className="w-full h-auto object-contain max-h-72" />
@@ -76,12 +75,12 @@ const Footer: React.FC = () => {
               <img src="/logos/wpplogo.png" alt="WhatsApp" className="h-[70px] w-[85px]" />
               <div>
                 <p className="font-bold">¡Contáctanos!</p>
-                <p>Te asesoramos y cotizamos en la brevedad</p>
+                <p>Te asesoramos y cotizamos a la brevedad</p>
               </div>
             </a>
 
             <div className="pl-[70px]">
-              <p>Tel: 4818269</p>
+              <p>Tel: (0351)4818269</p>
               <p>Mariano Larra 3375 - B° Urca</p>
               <p>Córdoba - Argentina</p>
             </div>

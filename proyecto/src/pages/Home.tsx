@@ -8,9 +8,20 @@ import { useEffect } from 'react';
 
 
 
+const mobileSlides = [
+  {
+    image: '/slides/slide1_mobile.png',
+    buttonText: 'Más Información',
+    link: '/services'
+  },
+  {
+    image: '/slides/slide2_mobile.png',
+    buttonText: 'Conocé Más',
+    link: '/services'
+  }
+];
 
-
-const slides = [
+const desktopSlides = [
   {
     image: '/slides/slide1.png',
     buttonText: 'Más Información',
@@ -19,14 +30,29 @@ const slides = [
   {
     image: '/slides/slide2.png',
     buttonText: 'Conocé Más',
-    link: '/about'
+    link: '/services'
   }
 ];
+
 
 const Home = () => {
   const [current, setCurrent] = useState(0);
 
   const location = useLocation();
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize(); // Llamada inicial
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
 
   useEffect(() => {
     if (location.state?.scrollTo === 'empresa') {
@@ -37,6 +63,7 @@ const Home = () => {
     }
   }, [location]);
 
+  const slides = isMobile ? mobileSlides : desktopSlides;
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
 
