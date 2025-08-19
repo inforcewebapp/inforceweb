@@ -11,9 +11,6 @@ interface FormInputs {
   empresa?: string; // honeypot
 }
 
-// ⚠️ Corrige la URL: una sola vez
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXiB3p8PuchAH9P1gfX2JhsPS2jPF-aimimPAPQ7IOYF5JPp0cNxRw7ZgFdMSi83uteQ/exec";
-
 const MAX_MB = 10;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
 const ALLOWED_EXT = ['pdf', 'doc', 'docx'];
@@ -79,7 +76,7 @@ const Careers: React.FC = () => {
       fd.append('cv', file, file.name);
 
       // ahora pega al endpoint de Netlify Function
-      const resp = await fetch("/api/sendMail", {
+      const resp = await fetch("/.netlify/functions/sendMail", {
         method: "POST",
         body: fd
       });
