@@ -86,7 +86,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="pl-[70px] flex space-x-4">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/inforce.seguridad?igsh=aG55OXFmNmp3Mzgx" target="_blank" rel="noopener noreferrer">
                 <img src="/logos/iglogo.png" alt="Instagram" className="h-[60px] w-[50px]" />
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">

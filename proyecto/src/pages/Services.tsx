@@ -4,23 +4,30 @@ import { Shield, Camera, Heart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+type Slide = {
+  image: string;
+  buttonText: string;
+  link: string;
+  fit?: 'fill' | 'centerCrop'; // opcional
+};
 
-const mobileSlides = [
+
+const mobileSlides: Slide[] = [
   {
     image: '/slides/slide1_mobile.png',
     buttonText: 'Más Información',
-    link: '/services',
-    targetId: 'serviciosinfo'
+    fit: 'fill',
+    link: '/services'
   },
   {
     image: '/slides/slide2_mobile.png',
+    fit: 'centerCrop',
     buttonText: 'Conocé Más',
-    link: '/services',
-    targetId: 'serviciosinfo'
+    link: '/services'
   }
 ];
 
-const desktopSlides = [
+const desktopSlides: Slide[] = [
   {
     image: '/slides/slide1.png',
     buttonText: 'Más Información',
@@ -58,7 +65,7 @@ const Services = () => {
   return (
     <div className="min-h-screen">
       {/* Carousel de imagenes */}
-      <div className="relative w-full h-[75vh] overflow-hidden mt-[-64px]">
+      <div className="relative w-full h-[calc(100vh-64px)] md:h-[75vh] overflow-hidden mt-[64px] md:mt-[-64px]">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -70,8 +77,9 @@ const Services = () => {
               <img
                 src={slide.image}
                 alt={`slide-${index}`}
-                className="absolute w-full h-full object-cover"
-                style={{ objectFit: 'fill', objectPosition: 'center' }}
+                className={`absolute h-full object-cover ${
+                  slide.fit === 'fill' ? 'w-full' : 'w-auto max-w-none left-1/2 -translate-x-1/2'
+                }`}
               />
             </div>
             <div className="absolute inset-0">
