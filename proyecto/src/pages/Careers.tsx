@@ -78,7 +78,12 @@ const Careers: React.FC = () => {
       fd.append('telefono', data.phone ?? '');
       fd.append('cv', file, file.name);
 
-      const resp = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: fd });
+      // ahora pega al endpoint de Netlify Function
+      const resp = await fetch("/api/sendMail", {
+        method: "POST",
+        body: fd
+      });
+
       const json = await resp.json().catch(() => ({}));
       if (!resp.ok || !json?.ok) throw new Error(json?.error || 'Error al enviar. Intenta de nuevo.');
 
@@ -93,6 +98,7 @@ const Careers: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b bg-white py-12">
