@@ -11,6 +11,7 @@ type Slide = {
   buttonText: string;
   link: string;
   fit?: 'fill' | 'centerCrop'; // opcional
+  scrollTo?: string; // nuevo campo
 };
 
 
@@ -19,13 +20,15 @@ const mobileSlides: Slide[] = [
     image: '/slides/slide1_mobile.png',
     buttonText: 'Más Información',
     fit: 'fill',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   },
   {
     image: '/slides/slide2_mobile.png',
     fit: 'centerCrop',
     buttonText: 'Conocé Más',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   }
 ];
 
@@ -33,14 +36,17 @@ const desktopSlides: Slide[] = [
   {
     image: '/slides/slide1.png',
     buttonText: 'Más Información',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   },
   {
     image: '/slides/slide2.png',
     buttonText: 'Conocé Más',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   }
 ];
+
 
 
 const Home = () => {
@@ -100,7 +106,7 @@ const Home = () => {
               />
             </div>
             <div className="absolute inset-0">
-              <Link to={slide.link}>
+              <Link to={slide.link} state={slide.scrollTo ? { scrollTo: slide.scrollTo } : undefined}>
                 <button
                   className={`absolute ${
                     isMobile

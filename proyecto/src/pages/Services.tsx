@@ -4,11 +4,13 @@ import { Shield, Camera, Heart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+
 type Slide = {
   image: string;
   buttonText: string;
   link: string;
   fit?: 'fill' | 'centerCrop'; // opcional
+  scrollTo?: string; // nuevo campo
 };
 
 
@@ -17,13 +19,15 @@ const mobileSlides: Slide[] = [
     image: '/slides/slide1_mobile.png',
     buttonText: 'Más Información',
     fit: 'fill',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   },
   {
     image: '/slides/slide2_mobile.png',
     fit: 'centerCrop',
     buttonText: 'Conocé Más',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   }
 ];
 
@@ -31,12 +35,14 @@ const desktopSlides: Slide[] = [
   {
     image: '/slides/slide1.png',
     buttonText: 'Más Información',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   },
   {
     image: '/slides/slide2.png',
     buttonText: 'Conocé Más',
-    link: '/services'
+    link: '/services',
+    scrollTo: 'serviciosinfo'
   }
 ];
 
@@ -45,6 +51,18 @@ const Services = () => {
   const [current, setCurrent] = useState(0);
   const location = useLocation();
   const isServicesPage = location.pathname === '/services';
+
+  useEffect(() => {
+    if (location.state?.scrollTo === 'serviciosinfo') {
+      const el = document.getElementById('serviciosinfo');
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    }
+  }, [location]);
+
 
 
   useEffect(() => {
@@ -65,7 +83,7 @@ const Services = () => {
   return (
     <div className="min-h-screen">
       {/* Carousel de imagenes */}
-      <div className="relative w-full h-[calc(100vh-64px)] md:h-[75vh] overflow-hidden mt-[64px] md:mt-[-64px]">
+      <div className={`relative w-full overflow-hidden ${isMobile ? 'h-[60vh] mt-[64px]' : 'h-[75vh] mt-[-64px]'}`}>
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -77,14 +95,24 @@ const Services = () => {
               <img
                 src={slide.image}
                 alt={`slide-${index}`}
-                className={`absolute h-full object-cover ${
-                  slide.fit === 'fill' ? 'w-full' : 'w-auto max-w-none left-1/2 -translate-x-1/2'
+                className={`absolute inset-0 ${
+                  isMobile
+                    ? slide.fit === 'fill'
+                      ? 'w-full h-full object-fill' // slide1_mobile
+                      : 'h-full w-auto max-w-none left-1/2 -translate-x-1/2 object-cover' // slide2_mobile
+                    : 'h-full w-full object-cover' // desktop (sin tocar)
                 }`}
               />
             </div>
             <div className="absolute inset-0">
-              <Link to={slide.link}>
-                <button className={`absolute left-[200px] bottom-[170px] text-sm px-4 py-2 rounded-full hover:bg-[#013f9e] ${isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'}`}>
+              <Link to={slide.link} state={slide.scrollTo ? { scrollTo: slide.scrollTo } : undefined}>
+                <button
+                  className={`absolute ${
+                    isMobile
+                      ? 'left-1/2 -translate-x-1/2 bottom-8 text-base px-6 py-3'
+                      : 'left-[200px] bottom-[170px] text-sm px-4 py-2'
+                  } bg-[#2a3446] text-white rounded-full font-medium hover:bg-[#013f9e] transition`}
+                >
                   {slide.buttonText}
                 </button>
               </Link>
@@ -92,17 +120,25 @@ const Services = () => {
           </div>
         ))}
 
+        {/* Flechas */}
+        {/* Flecha izquierda */}
         <button
           onClick={prevSlide}
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 z-20"
+          className={`absolute z-20 transform -translate-y-1/2 bg-black/40 text-white rounded-full hover:bg-black/60 transition ${
+            isMobile ? 'top-1/2 left-2 p-3' : 'top-1/2 left-4 p-2'
+          }`}
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className={`${isMobile ? 'w-8 h-8' : 'w-6 h-6'}`} />
         </button>
+
+        {/* Flecha derecha */}
         <button
           onClick={nextSlide}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 z-20"
+          className={`absolute z-20 transform -translate-y-1/2 bg-black/40 text-white rounded-full hover:bg-black/60 transition ${
+            isMobile ? 'top-1/2 right-2 p-3' : 'top-1/2 right-4 p-2'
+          }`}
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className={`${isMobile ? 'w-8 h-8' : 'w-6 h-6'}`} />
         </button>
 
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
