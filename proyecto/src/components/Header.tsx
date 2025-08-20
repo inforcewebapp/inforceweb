@@ -25,7 +25,9 @@ const Header: React.FC = () => {
 
 
   return (
-    <header className={`fixed top-0 w-full z-50 shadow-md ${isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'}`}>
+    <header className={`fixed top-0 w-full z-50 shadow-md ${
+      isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'
+    } h-[20vh] md:h-auto`}>
       <nav className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -33,7 +35,7 @@ const Header: React.FC = () => {
             <img 
               src={isServicesPage ? "/logo-azul.png" : "/logo.png"}
               alt="INFORCE SEGURIDAD"
-              className="h-15 md:h-14 w-auto object-contain"
+              className="max-h-full h-auto w-auto object-contain"
             />
           </Link>
 

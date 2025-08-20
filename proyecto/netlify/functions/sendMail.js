@@ -1,76 +1,75 @@
-import formidable from "formidable";
-import fs from "fs";
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
+const { IncomingForm } = require("formidable");
 
-export const config = {
-  api: {
-    bodyParser: false, // muy importante: desactiva parser JSON
-  },
-};
 
-export default async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ ok: false, error: "Método no permitido" });
-  }
 
-  const form = formidable({ multiples: false });
+exports.handler = async (event, context) => {
+  console.log("✅ [#0] Function triggered");
 
   try {
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        console.error("Error parseando form:", err);
-        return res
-          .status(400)
-          .json({ ok: false, error: "No se pudo procesar el formulario" });
-      }
+    // Paso 1: Verificar método
+    console.log("✅ [#1] Método recibido:", event.httpMethod);
+    if (event.httpMethod !== "POST") {
+      console.log("❌ [#1.1] Método inválido");
+      return { statusCode: 405, body: "Method Not Allowed" };
+    }
 
-      const nombre = fields.nombre?.[0] || "";
-      const email = fields.email?.[0] || "";
-      const telefono = fields.telefono?.[0] || "";
-      const cv = files.cv?.[0];
+    // Paso 2: Parsear el formulario
+    console.log("✅ [#2] Iniciando parse con formidable");
+    const form = new IncomingForm({ multiples: false });
 
-      if (!cv) {
-        return res.status(400).json({ ok: false, error: "No se recibió archivo" });
-      }
-
-      // Configuración SMTP (usar las env vars de Netlify)
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || "465"),
-        secure: true,
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
+    const data = await new Promise((resolve, reject) => {
+      form.parse(event, (err, fields, files) => {
+        if (err) {
+          console.log("❌ [#2.1] Error al parsear form:", err);
+          reject(err);
+        } else {
+          console.log("✅ [#2.2] Form parseado:", { fields, filesKeys: Object.keys(files) });
+          resolve({ fields, files });
+        }
       });
-
-      const mailOptions = {
-        from: process.env.SMTP_USER,
-        to: process.env.SMTP_USER, // te lo envías a vos mismo
-        subject: "Nueva postulación recibida",
-        text: `Nombre: ${nombre}\nEmail: ${email}\nTeléfono: ${telefono}`,
-        attachments: [
-          {
-            filename: cv.originalFilename,
-            content: fs.createReadStream(cv.filepath),
-          },
-        ],
-      };
-
-      try {
-        await transporter.sendMail(mailOptions);
-        return res.json({ ok: true });
-      } catch (e) {
-        console.error("Error enviando mail:", e);
-        return res
-          .status(500)
-          .json({ ok: false, error: "Error al enviar el correo" });
-      }
     });
-  } catch (e) {
-    console.error("Error general:", e);
-    return res
-      .status(500)
-      .json({ ok: false, error: "Error interno del servidor" });
+
+    // Paso 3: Config SMTP
+    console.log("✅ [#3] Configurando nodemailer con HOST:", process.env.SMTP_HOST);
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT || 465,
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // Paso 4: Envío de mail
+    console.log("✅ [#4] Enviando mail con datos:", data.fields);
+    const info = await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: process.env.SMTP_USER,
+      subject: `Nueva postulación de ${data.fields.nombre}`,
+      text: `Email: ${data.fields.email}\nTel: ${data.fields.telefono}`,
+      attachments: [
+        {
+          filename: data.files.cv.originalFilename,
+          path: data.files.cv.filepath,
+        },
+      ],
+    });
+
+    console.log("✅ [#5] Email enviado correctamente, ID:", info.messageId);
+
+    // Paso 5: Respuesta OK
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: true }),
+    };
+
+  } catch (err) {
+    console.error("🔥 [#ERR] ERROR en sendMail:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ ok: false, error: err.message }),
+    };
   }
 };
