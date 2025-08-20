@@ -57,14 +57,22 @@ const Header: React.FC = () => {
 
         {/* Navegación Mobile */}
         {isOpen && (
-          <div className="md:hidden mt-4 pb-4 flex flex-col space-y-4 text-sm">
-            <button onClick={() => { handleAboutClick(); setIsOpen(false); }} className="hover:text-white/80 text-left">
-              Sobre nosotros
-            </button>
-            <Link to="/services" className="hover:text-white/80">Servicios</Link>
-            <Link to="/contact" className="hover:text-white/80">Contacto</Link>
-          </div>
-        )}
+        <div
+          className={`absolute top-full left-0 w-full z-40 pb-4 flex flex-col space-y-4 text-sm ${
+            isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'
+          }`}
+        >
+          <button
+            onClick={() => { handleAboutClick(); setIsOpen(false); }}
+            className="hover:text-white/80 text-left px-6"
+          >
+            Sobre nosotros
+          </button>
+          <Link to="/services" className="hover:text-white/80 px-6">Servicios</Link>
+          <Link to="/contact" className="hover:text-white/80 px-6">Contacto</Link>
+        </div>
+      )}
+
       </nav>
     </header>
   );
