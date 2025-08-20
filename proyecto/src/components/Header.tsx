@@ -35,7 +35,7 @@ const Header: React.FC = () => {
             <img 
               src={isServicesPage ? "/logo-azul.png" : "/logo.png"}
               alt="INFORCE SEGURIDAD"
-              className="max-h-full h-auto w-auto object-contain"
+              className="h-full md:h-14 w-auto object-contain"
             />
           </Link>
 
