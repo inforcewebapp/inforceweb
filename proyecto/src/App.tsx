@@ -8,11 +8,7 @@ import Services from './pages/Services';
 import Careers from './pages/Careers';
 import Quote from './pages/Quote';
 import Contact from './pages/Contact';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
-import AdminRoute from './components/AdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
-import UpdatePassword from './pages/UpdatePassword';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -29,16 +25,6 @@ function App() {
             <Route path="/careers" element={<Careers />} />
             <Route path="/quote" element={<Quote />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/update-password" element={<UpdatePassword />} />
-            <Route
-              path="/admin/*"
-              element={
-                <AdminRoute>
-                  <Admin />
-                </AdminRoute>
-              }
-            />
           </Routes>
         </main>
         <WhatsAppButton />
