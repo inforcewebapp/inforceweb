@@ -16,15 +16,15 @@ type Slide = {
 
 const mobileSlides: Slide[] = [
   {
-    image: '/slides/slide1_mobile.png',
+    image: '/slides/slide1_mobile.jpg',
     buttonText: 'Más Información',
     fit: 'fill',
     link: '/services',
     scrollTo: 'serviciosinfo'
   },
   {
-    image: '/slides/slide2_mobile.png',
-    fit: 'centerCrop',
+    image: '/slides/slide2_mobile.jpg',
+    fit: 'fill',
     buttonText: 'Conocé Más',
     link: '/services',
     scrollTo: 'serviciosinfo'
