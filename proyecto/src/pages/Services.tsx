@@ -1,152 +1,149 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Shield, Camera, Heart } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 type Slide = {
   image: string;
-  buttonText: string;
-  link: string;
-  fit?: 'fill' | 'centerCrop'; // opcional
-  scrollTo?: string; // nuevo campo
-};
 
+  link: string;
+  fit?: "fill" | "centerCrop";
+  scrollTo?: string;
+};
 
 const mobileSlides: Slide[] = [
   {
-    image: '/slides/slide1_mobile.jpg',
-    buttonText: 'Más Información',
-    fit: 'fill',
-    link: '/services',
-    scrollTo: 'serviciosinfo'
+    image: "/1.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
   },
   {
-    image: '/slides/slide2_mobile.jpg',
-    fit: 'fill',
-    buttonText: 'Conocé Más',
-    link: '/services',
-    scrollTo: 'serviciosinfo'
-  }
+    image: "/2.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
+  },
+  {
+    image: "/3.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
+  },
 ];
 
 const desktopSlides: Slide[] = [
   {
-    image: '/slides/slide1.png',
-    buttonText: 'Más Información',
-    link: '/services',
-    scrollTo: 'serviciosinfo'
+    image: "/4.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
   },
   {
-    image: '/slides/slide2.png',
-    buttonText: 'Conocé Más',
-    link: '/services',
-    scrollTo: 'serviciosinfo'
-  }
+    image: "/5.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
+  },
+  {
+    image: "/6.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
+  },
 ];
 
 const Services = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [current, setCurrent] = useState(0);
   const location = useLocation();
-  const isServicesPage = location.pathname === '/services';
+  const isServicesPage = location.pathname === "/services";
 
   useEffect(() => {
-    if (location.state?.scrollTo === 'serviciosinfo') {
-      const el = document.getElementById('serviciosinfo');
+    if (location.state?.scrollTo === "serviciosinfo") {
+      const el = document.getElementById("serviciosinfo");
       if (el) {
         setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth' });
+          el.scrollIntoView({ behavior: "smooth" });
         }, 150);
       }
     }
   }, [location]);
 
-
-
   useEffect(() => {
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-  handleResize(); // Llamada inicial
+    handleResize(); // Llamada inicial
 
-  window.addEventListener('resize', handleResize);
-  return () => window.removeEventListener('resize', handleResize);
-}, []);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const slides = isMobile ? mobileSlides : desktopSlides;
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+
+  // Auto-advance slides every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   return (
     <div className="min-h-screen">
-      {/* Carousel de imagenes */}
-      <div className={`relative w-full overflow-hidden ${isMobile ? 'h-[60vh] mt-[64px]' : 'h-[75vh] mt-[-64px]'}`}>
+      {/* Banner Carousel - Mismo estilo que Home */}
+      <div
+        className={`relative w-full overflow-hidden ${
+          isMobile ? "h-[28vh] mt-[80px]" : "h-[50vh] mt-[50px]"
+        }`}
+      >
         {slides.map((slide, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              index === current ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
           >
-            <div className="relative w-full h-full overflow-hidden justify-center bg-black">
+            <div className="relative w-full h-full overflow-hidden">
               <img
                 src={slide.image}
                 alt={`slide-${index}`}
-                className={`absolute inset-0 ${
-                  isMobile
-                    ? slide.fit === 'fill'
-                      ? 'w-full h-full object-fill' // slide1_mobile
-                      : 'h-full w-auto max-w-none left-1/2 -translate-x-1/2 object-cover' // slide2_mobile
-                    : 'h-full w-full object-cover' // desktop (sin tocar)
-                }`}
+                className="w-full h-full object-cover object-top transition-all duration-1000"
               />
+
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
             </div>
-            <div className="absolute inset-0">
-              <Link to={slide.link} state={slide.scrollTo ? { scrollTo: slide.scrollTo } : undefined}>
-                <button
-                  className={`absolute ${
-                    isMobile
-                      ? 'left-1/2 -translate-x-1/2 bottom-8 text-base px-6 py-3'
-                      : 'left-[200px] bottom-[170px] text-sm px-4 py-2'
-                  } bg-[#2a3446] text-white rounded-full font-medium hover:bg-[#013f9e] transition`}
+
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"></div>
+
+            {/* Botón de asesor - Oculto en banner 1 */}
+            {slide.image !== "/1.png" && slide.image !== "/4.png" && (
+              <div className="absolute right-[50px] md:right-[210px] bottom-15 md:bottom-20 z-20">
+                <a
+                  href="https://wa.me/5493513584999"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-15 px-8 py-5 
+                            bg-gradient-to-r from-[#014fca] to-[#0056d6] 
+                            text-white font-semibold rounded-xl shadow-2xl 
+                            hover:shadow-lg hover:shadow-blue-500/50 
+                            hover:from-[#0056d6] hover:to-[#014fca] 
+                            hover:scale-105 transition-all duration-300 
+                            backdrop-blur-sm border border-white/20"
                 >
-                  {slide.buttonText}
-                </button>
-              </Link>
-            </div>
+                  <div className="text-left">
+                    <p className="text-sm font-bold leading-tight">
+                      Comunicate con un asesor
+                    </p>
+                  </div>
+                </a>
+              </div>
+            )}
           </div>
         ))}
-
-        {/* Flechas */}
-        {/* Flecha izquierda */}
-        <button
-          onClick={prevSlide}
-          className={`absolute z-20 transform -translate-y-1/2 bg-black/40 text-white rounded-full hover:bg-black/60 transition ${
-            isMobile ? 'top-1/2 left-2 p-3' : 'top-1/2 left-4 p-2'
-          }`}
-        >
-          <ChevronLeft className={`${isMobile ? 'w-8 h-8' : 'w-6 h-6'}`} />
-        </button>
-
-        {/* Flecha derecha */}
-        <button
-          onClick={nextSlide}
-          className={`absolute z-20 transform -translate-y-1/2 bg-black/40 text-white rounded-full hover:bg-black/60 transition ${
-            isMobile ? 'top-1/2 right-2 p-3' : 'top-1/2 right-4 p-2'
-          }`}
-        >
-          <ChevronRight className={`${isMobile ? 'w-8 h-8' : 'w-6 h-6'}`} />
-        </button>
 
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
           {slides.map((_, index) => (
             <span
               key={index}
               className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                index === current ? 'bg-[#014fca]' : 'bg-white/60'
+                index === current ? "bg-[#014fca]" : "bg-white/60"
               }`}
             ></span>
           ))}
@@ -154,77 +151,229 @@ const Services = () => {
       </div>
 
       {/* SEGURIDAD FÍSICA Y ELECTRÓNICA */}
-      <section id="serviciosinfo" className="bg-white py-16 relative overflow-hidden">
-        <div className="flex justify-center mb-12">
-          <h2
-            className={`w-full max-w-screen-xl mx-auto py-2 text-xl font-bold uppercase text-center ${
-              isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'
-            }`}
-          >
-            SEGURIDAD FÍSICA Y ELECTRÓNICA
-          </h2>
-        </div>
-
-        <div className="container mx-auto px-6 flex flex-col md:flex-row md:items-start gap-8">
-          <div className="w-full md:w-2/5 flex flex-col items-center text-center gap-4">
-            <div className={`text-lg font-medium ${isServicesPage ? 'text-[#2a3446]' : 'text-[#014fca]'}`}>
-              <p className="font-bold text-2xl">Nos encargamos de la</p>
-              <p className="font-bold text-2xl">vigilancia interior, exterior y</p>
-              <p className="font-bold text-2xl">perimetral de las instalaciones</p>
-              <p className="font-bold text-2xl">que necesites proteger</p>
-            </div>
-            <img
-              src="/service/ss1.png"
-              alt="Consulta"
-              className="max-w-full h-auto object-contain max-h-72"
-            />
+      <section
+        id="serviciosinfo"
+        className="bg-white via-white to-blue-50 py-20 relative overflow-hidden"
+      >
+        <div className="container mx-auto px-6">
+          <div className="flex justify-center mb-16 relative">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 text-center bg-gradient-to-r from-[#2a3446] to-[#1e2936] bg-clip-text text-transparent rounded-xl py-3 px-10 relative inline-block">
+              Seguridad Física y Electrónica
+              <span className="absolute left-1/4 bottom-0 w-1/2 h-1 bg-gradient-to-r from-[#2a3446] to-[#1e2936] rounded-full"></span>
+            </h2>
           </div>
 
-          <div className="w-full md:w-3/5 flex flex-col gap-10">
-            <div className="text-[#2a3446] text-base">
-              <p className="font-semibold text-3xl mb-2">¿Cómo trabajamos?</p>
-              <ul className="list-disc ml-6 space-y-2">
-                <li>Realizamos un análisis de riesgo, con los correspondientes planes de seguridad. Disuasión, prevención y control de daños.</li>
-                <li>Identificamos y desarrollamos una estrategia predictiva y evolucionada con protocolos de seguridad y el uso de IA.</li>
-                <li>Incorporamos personal capacitado.</li>
-              </ul>
-            </div>
-
-            <div className="text-[#2a3446] text-base">
-              <p className="font-semibold text-3xl mb-2">Seguridad física</p>
-              <p>
-                Nuestros vigiladores están habilitados por el Ministerio de Seguridad de la Provincia de Córdoba. Para lo cual cumplen todas las exigencias (capacitaciones, certificados, etc) de la Ley N° 10.571 y de la Ley N° 10954, en caso que porten armas menos letales.
+          {/* Introducción principal */}
+          <div className="text-center mb-16">
+            <div className=" p-8  max-w-4xl mx-auto">
+              <h3 className="text-2xl md:text-3xl font-bold text-[#2a3446] mb-6">
+                Protección Integral 24/7
+              </h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Nos especializamos en la vigilancia interior, exterior y
+                perimetral de instalaciones, combinando personal altamente
+                capacitado con tecnología de vanguardia para garantizar la
+                máxima seguridad de tu empresa o propiedad.
               </p>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            {/* Metodología de trabajo */}
+            <div className="duration-300">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#2a3446] to-[#1e2936] rounded-full flex items-center justify-center">
+                  <span className="text-white text-xl font-bold">🔍</span>
+                </div>
+                <h3 className="text-2xl font-bold text-[#2a3446]">
+                  ¿Cómo trabajamos?
+                </h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-[#2a3446] rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-700 leading-relaxed">
+                    <strong>Análisis de riesgo:</strong> Evaluamos
+                    vulnerabilidades y diseñamos planes de seguridad
+                    personalizados con estrategias de disuasión, prevención y
+                    control de daños.
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-[#2a3446] rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-700 leading-relaxed">
+                    <strong>Estrategia predictiva:</strong> Desarrollamos
+                    protocolos avanzados potenciados por inteligencia artificial
+                    para anticipar y prevenir incidentes.
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-[#2a3446] rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-gray-700 leading-relaxed">
+                    <strong>Personal especializado:</strong> Incorporamos
+                    vigiladores certificados y continuamente capacitados para
+                    cada tipo de instalación.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Imagen ilustrativa */}
+            <div className="flex items-center justify-center">
+              <div className=" duration-300">
+                <img
+                  src="/service/ss1.png"
+                  alt="Seguridad Física"
+                  className="w-full h-auto object-contain max-h-80 rounded-xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Certificaciones */}
+          <div className="bg-white rounded-2xl transition-shadow duration-300">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-[#2a3446] to-[#1e2936] rounded-full flex items-center justify-center">
+                <span className="text-white text-xl font-bold">🛡️</span>
+              </div>
+              <h3 className="text-2xl font-bold text-[#2a3446]">
+                Certificación y Legalidad
+              </h3>
+            </div>
+            <p className="text-gray-700 leading-relaxed text-lg">
+              Todos nuestros vigiladores están{" "}
+              <strong>
+                habilitados por el Ministerio de Seguridad de la Provincia de
+                Córdoba
+              </strong>
+              , cumpliendo estrictamente con las exigencias de la{" "}
+              <strong>Ley N° 10.571</strong> y la <strong>Ley N° 10.954</strong>
+              para el porte de armas menos letales. Garantizamos el más alto
+              nivel de profesionalismo y cumplimiento normativo.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-16">
-        <div className="container mx-auto px-6 flex flex-col md:flex-row md:items-center gap-8">
-          <div className="w-full md:w-3/5">
-            <div className="text-[#2a3446] text-base mb-6">
-              <p className="font-semibold text-3xl text-[#2a3446] mb-4">
-                Videovigilancia de cámaras desde Bunker propio
-              </p>
-              <ul className="list-disc ml-6 space-y-2">
-                <li>Para ver tu negocio, empresa, industria, cuando no está ahí. Previene delitos y ofrece tranquilidad</li>
-                <li>Conexión de cámaras monitoreadas a la central de monitoreo de INFORCE</li>
-                <li>Monitorear instalaciones en tiempo real y detecta intrusiones o eventos.</li>
-                <li>El sistema genera alertas ante la detección de intrusos o actividad sospechosa, a través de sistemas analíticos con uso de IA.</li>
-                <li>El personal de monitoreo responde de inmediato ante cualquier evento con protocolos normalizados.</li>
-                <li>Siendo celosos de la privacidad de nuestros clientes. La confidencialidad es uno de nuestros valores.</li>
-              </ul>
-            </div>
+      <section className="bg-gray-100 py-20">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-center mb-16 relative">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 text-center bg-gradient-to-r from-[#014fca] to-[#0056d6] bg-clip-text text-transparent rounded-xl py-3 px-10 relative inline-block">
+              Videovigilancia Inteligente
+              <span className="absolute left-1/4 bottom-0 w-1/2 h-1 bg-gradient-to-r from-[#014fca] to-[#0056d6] rounded-full"></span>
+            </h2>
           </div>
 
-          <div className="w-full md:w-2/5 flex justify-center md:justify-end">
-            <div className="overflow-hidden w-[350px] h-[350px]">
-              <img
-                src="/service/ss2.png"
-                alt="Vigilancia"
-                className="w-full h-full object-cover"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Contenido */}
+            <div className="space-y-8">
+              <div className=" duration-300 mb-10">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-[#014fca] to-[#0056d6] rounded-full flex items-center justify-center">
+                    <span className="text-white text-xl font-bold">📹</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#2a3446]">
+                    Monitoreo desde Búnker Propio
+                  </h3>
+                </div>
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  Vigilancia remota 24/7 desde nuestra central de monitoreo
+                  especializada, equipada con tecnología de última generación y
+                  personal altamente capacitado.
+                </p>
+              </div>
+
+              {/* Características principales */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-[#014fca] hover:shadow-xl transition-shadow duration-300">
+                  <h4 className="font-bold text-lg text-[#2a3446] mb-3">
+                    🔗 Conectividad Total
+                  </h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Conexión directa de cámaras a nuestra central de monitoreo
+                    INFORCE para supervisión continua.
+                  </p>
+                </div>
+                <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-[#014fca] hover:shadow-xl transition-shadow duration-300">
+                  <h4 className="font-bold text-lg text-[#2a3446] mb-3">
+                    ⚡ Tiempo Real
+                  </h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Monitoreo instantáneo que detecta intrusiones y eventos
+                    sospechosos al momento.
+                  </p>
+                </div>
+                <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-[#014fca] hover:shadow-xl transition-shadow duration-300">
+                  <h4 className="font-bold text-lg text-[#2a3446] mb-3">
+                    🤖 IA Avanzada
+                  </h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Sistemas analíticos con inteligencia artificial para alertas
+                    precisas y reducción de falsas alarmas.
+                  </p>
+                </div>
+                <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-[#014fca] hover:shadow-xl transition-shadow duration-300">
+                  <h4 className="font-bold text-lg text-[#2a3446] mb-3">
+                    🔒 Confidencialidad
+                  </h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Máxima privacidad y confidencialidad en el manejo de
+                    información de nuestros clientes.
+                  </p>
+                </div>
+              </div>
+
+              {/* Beneficios */}
+              <div className="bg-gray-100  p-10 text-gray-800 max-w-4xl mx-auto">
+                <h4 className="text-2xl font-extrabold mb-8 text-gray-900 border-b-2 border-blue-500 inline-block pb-2">
+                  Beneficios Clave
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex items-start gap-4">
+                    <div className="text-blue-500 text-3xl">🛡️</div>
+                    <p className="text-gray-700 text-base font-medium">
+                      Prevención activa de delitos
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="text-blue-500 text-3xl">📱</div>
+                    <p className="text-gray-700 text-base font-medium">
+                      Respuesta inmediata a eventos
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="text-blue-500 text-3xl">💼</div>
+                    <p className="text-gray-700 text-base font-medium">
+                      Tranquilidad para tu negocio
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="text-blue-500 text-3xl">⚙️</div>
+                    <p className="text-gray-700 text-base font-medium">
+                      Protocolos normalizados
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Imagen */}
+            <div className="flex items-center justify-center">
+              <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+                <img
+                  src="/service/ss2.png"
+                  alt="Centro de Monitoreo"
+                  className="w-full h-auto object-contain max-h-96 rounded-xl"
+                />
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-600 font-medium">
+                    Centro de Monitoreo INFORCE
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Tecnología de vanguardia 24/7
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

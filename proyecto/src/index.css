@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Configuración de la fuente Trasandina para títulos */
+@layer base {
+  h1, h2, h3, h4, h5, h6, .title, .heading {
+    font-family: 'Trasandina', sans-serif;
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-right {
+  animation: scroll-right 20s linear infinite;
+}
+
+.animate-scroll-left {
+  animation: scroll-left 20s linear infinite;
+}
