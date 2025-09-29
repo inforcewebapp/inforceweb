@@ -25,51 +25,87 @@ const Header: React.FC = () => {
 
 
   return (
-    <header className={`fixed top-0 w-full z-50 shadow-md ${
-      isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'
+    <header className={`fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 ${
+      isServicesPage 
+        ? 'bg-gradient-to-r from-[#2a3446] via-[#2a3446] to-[#1e2936] shadow-2xl' 
+        : 'bg-gradient-to-r from-[#014fca] via-[#0056d6] to-[#003db3] shadow-2xl'
     } h-[20vh] md:h-auto`}>
-      <nav className="container mx-auto px-6 py-3">
+      <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center group">
             <img 
               src={isServicesPage ? "/logo-azul.png" : "/logo.png"}
               alt="INFORCE SEGURIDAD"
-              className="max-h-[14vh] md:max-h-16 w-auto object-contain mx-auto"
+              className="max-h-[14vh] md:max-h-20 w-auto object-contain mx-auto transition-all duration-300 hover:scale-105 drop-shadow-lg"
             />
           </Link>
 
           {/* Menú desktop */}
-          <div className="hidden md:flex space-x-10 text-sm font-light tracking-wide">
-            <button onClick={handleAboutClick} className="hover:text-white/80">Sobre nosotros</button>
-            <Link to="/services" className="hover:text-white/80">Servicios</Link>
-            <Link to="/contact" className="hover:text-white/80">Contacto</Link>
+          <div className="hidden md:flex space-x-12 text-base font-medium tracking-wider">
+            <button 
+              onClick={handleAboutClick} 
+              className="relative px-4 py-2 uppercase transition-all duration-300    group"
+            >
+              <span className="relative z-10">Sobre nosotros</span>
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            </button>
+            <Link 
+              to="/services" 
+              className="relative px-4 py-2 uppercase transition-all duration-300    group"
+            >
+              <span className="relative z-10">Servicios</span>
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            </Link>
+            <Link 
+              to="/contact" 
+              className="relative px-4 py-2 uppercase transition-all duration-300    group"
+            >
+              <span className="relative z-10">Contacto</span>
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            </Link>
           </div>
 
           {/* Menú mobile */}
           <button
-            className="md:hidden"
+            className="md:hidden p-2 rounded-lg transition-all duration-300 hover:bg-white/10 hover:scale-105 border border-transparent hover:border-white/20"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
           </button>
         </div>
 
         {/* Navegación Mobile */}
         {isOpen && (
         <div
-          className={`absolute top-full left-0 w-full z-40 pb-4 flex flex-col space-y-4 text-sm ${
-            isServicesPage ? 'bg-[#2a3446] text-white' : 'bg-[#014fca] text-white'
-          }`}
+          className={`absolute top-full left-0 w-full z-40 backdrop-blur-md border-t border-white/10 ${
+            isServicesPage 
+              ? 'bg-gradient-to-b from-[#2a3446]/95 to-[#1e2936]/95' 
+              : 'bg-gradient-to-b from-[#014fca]/95 to-[#003db3]/95'
+          } shadow-2xl`}
         >
-          <button
-            onClick={() => { handleAboutClick(); setIsOpen(false); }}
-            className="hover:text-white/80 text-left px-6"
-          >
-            Sobre nosotros
-          </button>
-          <Link to="/services" className="hover:text-white/80 px-6">Servicios</Link>
-          <Link to="/contact" className="hover:text-white/80 px-6">Contacto</Link>
+          <div className="flex flex-col space-y-2 p-4">
+            <button
+              onClick={() => { handleAboutClick(); setIsOpen(false); }}
+              className="text-left px-4 py-3 text-base font-medium uppercase tracking-wide transition-all duration-300 hover:bg-white/10 rounded-lg hover:scale-105 border border-transparent hover:border-white/20"
+            >
+              Sobre nosotros
+            </button>
+            <Link 
+              to="/services" 
+              className="px-4 py-3 text-base font-medium uppercase tracking-wide transition-all duration-300 hover:bg-white/10 rounded-lg hover:scale-105 border border-transparent hover:border-white/20"
+              onClick={() => setIsOpen(false)}
+            >
+              Servicios
+            </Link>
+            <Link 
+              to="/contact" 
+              className="px-4 py-3 text-base font-medium uppercase tracking-wide transition-all duration-300 hover:bg-white/10 rounded-lg hover:scale-105 border border-transparent hover:border-white/20"
+              onClick={() => setIsOpen(false)}
+            >
+              Contacto
+            </Link>
+          </div>
         </div>
       )}
 

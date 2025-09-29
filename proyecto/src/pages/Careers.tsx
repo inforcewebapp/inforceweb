@@ -69,28 +69,27 @@ const Careers: React.FC = () => {
         return;
       }
 
-      const fd = new FormData();
-      fd.append('nombre', data.name);
-      fd.append('email', data.email);
-      fd.append('telefono', data.phone ?? '');
-      fd.append('cv', file, file.name);
+      // Crear mensaje para WhatsApp
+      const mensaje = `Nueva postulación desde la web
 
-      // ahora pega al endpoint de Netlify Function
-      const resp = await fetch("/.netlify/functions/sendMail", {
-        method: "POST",
-        body: fd
-      });
+Nombre: ${data.name}
+Email: ${data.email}
+Teléfono: ${data.phone}
+CV: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
 
-      const json = await resp.json().catch(() => ({}));
-      if (!resp.ok || !json?.ok) throw new Error(json?.error || 'Error al enviar. Intenta de nuevo.');
+Nota: El CV debe ser enviado por separado ya que WhatsApp no permite adjuntar archivos desde web.`;
 
-      toast.success('¡Gracias por tu postulación!');
+      const whatsappUrl = `https://wa.me/5493513584999?text=${encodeURIComponent(mensaje)}`;
+      
+      window.open(whatsappUrl, '_blank');
+      
+      toast.success('¡Redirigiendo a WhatsApp! Recuerda enviar tu CV por separado.');
       reset();
       setFileName('');
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error: any) {
       console.error('Error:', error);
-      toast.error(error?.message || 'Hubo un error al enviar el formulario.');
+      toast.error(error?.message || 'Hubo un error al procesar el formulario.');
     } finally {
       setIsSubmitting(false);
     }
