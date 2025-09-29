@@ -11,7 +11,7 @@ type Slide = {
 
 const mobileSlides: Slide[] = [
   {
-    image: "/1.png",
+    image: "/monitoreo.png",
     link: "/services",
     scrollTo: "serviciosinfo",
   },
@@ -29,7 +29,7 @@ const mobileSlides: Slide[] = [
 
 const desktopSlides: Slide[] = [
   {
-    image: "/4.png",
+    image: "/monitoreo.png",
     link: "/services",
     scrollTo: "serviciosinfo",
   },
@@ -113,7 +113,7 @@ const Services = () => {
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"></div>
 
             {/* Botón de asesor - Oculto en banner 1 */}
-            {slide.image !== "/1.png" && slide.image !== "/4.png" && (
+            {slide.image !== "/monitoreo.png" && slide.image !== "/monitoreo.png" && (
               <div className="absolute right-[50px] md:right-[210px] bottom-15 md:bottom-20 z-20">
                 <a
                   href="https://wa.me/5493513584999"
