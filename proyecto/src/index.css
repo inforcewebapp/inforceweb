@@ -2,10 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Configuración de la fuente Trasandina para títulos */
+/* Configuración de la fuente Work Sans para títulos (reemplazo de Trasandina) */
 @layer base {
   h1, h2, h3, h4, h5, h6, .title, .heading {
-    font-family: 'Trasandina', sans-serif;
+    font-family: var(--font-titles);
+    letter-spacing: -0.01em; /* Ajuste para que Work Sans se asemeje más a Trasandina */
+    font-weight: 600; /* Work Sans es un poco más fina que Trasandina por defecto */
+  }
+  
+  /* Ajustes específicos para diferentes niveles de encabezados */
+  h1, h2, .title {
+    font-weight: 700;
   }
 }
 
@@ -28,9 +35,15 @@
 }
 
 .animate-scroll-right {
-  animation: scroll-right 20s linear infinite;
+  animation: scroll-right 60s linear infinite;
 }
 
 .animate-scroll-left {
-  animation: scroll-left 20s linear infinite;
+  animation: scroll-left 55s linear infinite;
+}
+
+/* Pausar la animación al pasar el ratón */
+.animate-scroll-right:hover,
+.animate-scroll-left:hover {
+  animation-play-state: paused;
 }

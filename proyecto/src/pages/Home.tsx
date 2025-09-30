@@ -20,12 +20,12 @@ const mobileSlides: Slide[] = [
     link: "/services",
     scrollTo: "serviciosinfo",
   },
- 
+
 ];
 
 const desktopSlides: Slide[] = [
   {
-     image: "/monitoreo.png",
+    image: "/monitoreo.png",
     link: "/services",
     scrollTo: "serviciosinfo",
   },
@@ -76,58 +76,59 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
+  <div
+  className={`relative w-full overflow-hidden ${
+    isMobile ? "mt-[75px]" : "mt-[50px]"
+  }`}
+>
+  <div className="aspect-[3/1] md:aspect-[30/9] lg:aspect-[14/4] max-h-[80vh]">
+    {slides.map((slide, index) => (
       <div
-        className={`relative w-full overflow-hidden ${
-          isMobile ? "min-h-[26vh] mt-[80px]" : "h-[50vh] mt-[50px]"
+        key={index}
+        className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+          index === current ? "opacity-100 z-10" : "opacity-0 z-0"
         }`}
       >
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === current ? "opacity-100 z-10" : "opacity-0 z-0"
-            }`}
-          >
-           <div className="relative w-full h-full overflow-hidden">
-  <img
-    src={slide.image}
-    alt={`slide-${index}`}
-    className="w-full h-full object-cover object-left md:object-top transition-all duration-1000"
-  />
+        <div className="relative w-full h-full overflow-hidden">
+          <img
+            src={slide.image}
+            alt={`slide-${index}`}
+            className="w-full h-full object-cover object-center md:object-[center_top] transition-all duration-1000"
+          />
 
-  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
-  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
-</div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent md:from-black/60 md:via-black/25 md:to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:from-black/70 md:via-transparent md:to-black/30"></div>
+        </div>
 
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"></div>
 
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"></div>
-
-            {/* Botón de asesor - Oculto en banner 1 y 4 */}
-            {slide.image !== "/monitoreo.png" && slide.image !== "/monitoreo.png" && (
-              <div className="absolute right-[50px] md:right-[210px] bottom-15 md:bottom-20 z-20">
-                <a
-                  href="https://wa.me/5493513584999"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-15 px-8 py-5 
-                      bg-gradient-to-r from-[#014fca] to-[#0056d6] 
-                      text-white font-semibold rounded-xl shadow-2xl 
-                      hover:shadow-lg hover:shadow-blue-500/50 
-                      hover:from-[#0056d6] hover:to-[#014fca] 
-                      hover:scale-105 transition-all duration-300 
-                      backdrop-blur-sm border border-white/20"
-                >
-                  <div className="text-left">
-                    <p className="text-sm font-bold leading-tight">
-                      Comunicate con un asesor
-                    </p>
-                  </div>
-                </a>
+        {/* Botón de asesor - Oculto en banner 1 y 4 */}
+        {slide.image !== "/monitoreo.png" && slide.image !== "/monitoreo.png" && (
+          <div className="absolute right-4 md:right-8 lg:right-12 bottom-4 md:bottom-6 lg:bottom-8 z-20">
+            <a
+              href="https://wa.me/5493513584999"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-3 lg:px-5 lg:py-3 
+                  bg-gradient-to-r from-[#014fca] to-[#0056d6] 
+                  text-white font-semibold rounded-xl shadow-2xl 
+                  hover:shadow-lg hover:shadow-blue-500/50 
+                  hover:from-[#0056d6] hover:to-[#014fca] 
+                  hover:scale-105 transition-all duration-300 
+                  backdrop-blur-sm border border-white/20"
+            >
+              <div className="text-left">
+                <p className="text-xs font-bold leading-tight whitespace-nowrap">
+                  Comunicate con un asesor
+                </p>
               </div>
-            )}
+            </a>
           </div>
-        ))}
+        )}
       </div>
+    ))}
+  </div>
+</div>
 
       {/* Sección de Videos */}
       <section className="py-16 bg-gray-100">
@@ -163,7 +164,7 @@ const Home = () => {
                     muted
                     loop
                     playsInline
-                    src="/video/video2.mp4"
+                    src="/video/video1.mp4"
                   >
                     <source src="/videos/video2.mp4" type="video/mp4" />
                     Tu navegador no soporta videos HTML5.
@@ -273,7 +274,7 @@ const Home = () => {
                       loop
                       playsInline
                       controls
-                      src="/video/vertical.mp4"
+                      src="/video/verticalvideo.mp4"
                     >
                       <source src="/video/verti.mp4" type="video/mp4" />
                       Tu navegador no soporta videos HTML5.

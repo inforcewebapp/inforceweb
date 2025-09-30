@@ -1,7 +1,8 @@
-import React from 'react';
+// Componente mejorado de carrusel de empresas clientes
 
 const ClientsSlider = () => {
-  const empresas = [
+  // Primera fila de empresas (logos existentes)
+  const empresas1 = [
     '/empresas/dino.png',
     '/empresas/quimiguay.png',
     '/empresas/tecmaq.png',
@@ -10,14 +11,38 @@ const ClientsSlider = () => {
     '/empresas/haus.png',
     '/empresas/bbc.png',
     '/empresas/betonmac.png',
-    '/empresas/lindeno.png'
+    '/empresas/lindeno.png',
+    '/empresas/61.png',
+    '/empresas/62.png',
+    '/empresas/63.png',
+    '/empresas/64.png',
+    '/empresas/65.png'
+  ];
+  
+  // Segunda fila de empresas (distinta para mayor variedad visual)
+  const empresas2 = [
+    '/empresas/66.png',
+    '/empresas/67.png',
+    '/empresas/68.png',
+    '/empresas/69.png',
+    '/empresas/70.png',
+    '/empresas/71.png',
+    '/empresas/72.png',
+    '/empresas/73.png',
+    '/empresas/74.png',
+    '/empresas/75.png',
+    '/empresas/76.png',
+    '/empresas/77.png',
+    '/empresas/bbc.png',
+    '/empresas/haus.png'
   ];
 
-  // Duplicar el array para crear un loop infinito
-  const duplicatedEmpresas = [...empresas, ...empresas];
+  // Duplicar los arrays para crear loops infinitos
+  const duplicatedEmpresas1 = [...empresas1, ...empresas1];
+  const duplicatedEmpresas2 = [...empresas2, ...empresas2];
 
   return (
-    <section className="py-16 bg-gray-100 overflow-hidden">
+    <section className="py-12 bg-gray-100 overflow-hidden">
       <div className="container mx-auto px-6">
        
         <div className="flex justify-center mb-12 relative">
@@ -31,14 +56,14 @@ const ClientsSlider = () => {
 </div>
 
         {/* Primera fila - movimiento hacia la derecha */}
-        <div className="relative mb-[5rem]">
+        <div className="relative mb-[1rem] mt-4">
           <div className="flex animate-scroll-right">
-            {duplicatedEmpresas.map((logo, index) => (
-              <div key={index} className="flex-shrink-0 mx-8">
+            {duplicatedEmpresas1.map((logo, index) => (
+              <div key={`row1-${index}`} className="flex-shrink-0 mx-10 my-2 flex items-center justify-center">
                 <img
                   src={logo}
                   alt={`empresa-${index}`}
-                  className="h-12 md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
+                  className="w-[150px] h-[90px] md:w-[180px] md:h-[110px] lg:w-[220px] lg:h-[130px] object-contain object-center transition-all duration-300 hover:scale-110"
                 />
               </div>
             ))}
@@ -46,19 +71,24 @@ const ClientsSlider = () => {
         </div>
 
         {/* Segunda fila - movimiento hacia la izquierda */}
-        <div className="relative">
-          <div className="flex animate-scroll-left">
-            {duplicatedEmpresas.map((logo, index) => (
-              <div key={index} className="flex-shrink-0 mx-8">
-                <img
-                  src={logo}
-                  alt={`empresa-${index}`}
-                  className="h-12 md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+       {/* Segunda fila - movimiento hacia la izquierda */}
+<div className="relative">
+  <div className="flex animate-scroll-left">
+    {duplicatedEmpresas2.map((logo, index) => (
+      <div
+        key={`row2-${index}`}
+        className="flex-shrink-0 mx-2 my-2 flex items-center justify-center" 
+      >
+        <img
+          src={logo}
+          alt={`empresa-${index}`}
+          className="w-[240px] h-[150px] md:w-[280px] md:h-[180px] lg:w-[320px] lg:h-[200px] object-contain object-center transition-all duration-300 hover:scale-110"
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
       </div>
 
     </section>
