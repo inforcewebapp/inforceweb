@@ -88,10 +88,11 @@ const Services = () => {
     <div className="min-h-screen">
       {/* Banner Carousel - Mismo estilo que Home */}
       <div
-        className={`relative w-full overflow-hidden ${
-          isMobile ? "h-[28vh] mt-[80px]" : "h-[50vh] mt-[50px]"
+         className={`relative w-full overflow-hidden ${
+    isMobile ? "mt-[75px]" : "mt-[50px]"
         }`}
       >
+        <div className="aspect-[3/1] md:aspect-[30/9] lg:aspect-[14/4] max-h-[80vh]">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -137,7 +138,7 @@ const Services = () => {
             )}
           </div>
         ))}
-
+</div>
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
           {slides.map((_, index) => (
             <span
