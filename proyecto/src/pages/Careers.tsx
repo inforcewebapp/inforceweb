@@ -11,6 +11,15 @@ interface FormInputs {
   empresa?: string; // honeypot
 }
 
+// ⚠️ URL de la función serverless de Netlify para enviar email
+// Utilizamos un path relativo para evitar problemas con diferentes entornos
+const NETLIFY_FUNCTION_URL = "/.netlify/functions/sendMail";
+
+// Detectamos si estamos en desarrollo local (http://localhost) o producción
+// Usamos useEffect para acceder a window de forma segura
+const isDevelopment = typeof window !== "undefined" && 
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+
 const MAX_MB = 10;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
 const ALLOWED_EXT = ['pdf', 'doc', 'docx'];
@@ -47,54 +56,158 @@ const Careers: React.FC = () => {
 
   const onSubmit = async (data: FormInputs) => {
     try {
+      console.log('Iniciando proceso de envío...');
+      
+      // Validar honeypot (anti-spam)
       if (data.empresa && data.empresa.trim()) {
         toast.error('Envío inválido');
         return;
       }
       setIsSubmitting(true);
+      
+      // Mostrar indicador de carga
+      toast.loading('Preparando tu solicitud...', { id: 'sending' });
 
+      // Validar archivo adjunto
       const file = data.cv?.[0];
       if (!file) {
-        toast.error('El CV es requerido');
+        toast.error('El CV es requerido', { id: 'sending' });
+        setIsSubmitting(false);
         return;
       }
 
+      // Validar extensión
       const ext = getExt(file.name);
       if (!ALLOWED_EXT.includes(ext)) {
-        toast.error(`Formato no permitido. Solo: ${ALLOWED_EXT.join(', ')}`);
+        toast.error(`Formato no permitido. Solo: ${ALLOWED_EXT.join(', ')}`, { id: 'sending' });
+        setIsSubmitting(false);
         return;
       }
+      
+      // Validar tamaño
       if (file.size > MAX_BYTES) {
-        toast.error(`El archivo es muy grande (máx ${MAX_MB} MB)`);
+        toast.error(`El archivo es muy grande (máx ${MAX_MB} MB)`, { id: 'sending' });
+        setIsSubmitting(false);
         return;
       }
 
-      // Crear mensaje para WhatsApp
-      const mensaje = `Nueva postulación desde la web
+      // Crear FormData para enviar a la función serverless de Netlify
+      const formData = new FormData();
+      formData.append('nombre', data.name);
+      formData.append('email', data.email);
+      formData.append('telefono', data.phone ?? '');
+      // Enviamos el archivo con AMBOS nombres para asegurar compatibilidad
+      formData.append('file', file, file.name); // Para lambda-multipart-parser
+      formData.append('cv', file, file.name);   // Por si el backend espera este nombre
 
-Nombre: ${data.name}
-Email: ${data.email}
-Teléfono: ${data.phone}
-CV: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
-
-Nota: El CV debe ser enviado por separado ya que WhatsApp no permite adjuntar archivos desde web.`;
-
-      const whatsappUrl = `https://wa.me/5493513584999?text=${encodeURIComponent(mensaje)}`;
+      console.log('Enviando formulario a la función serverless de Netlify...');
+      console.log('URL:', NETLIFY_FUNCTION_URL);
       
-      window.open(whatsappUrl, '_blank');
+      // En desarrollo, mostramos más información para depurar
+      if (isDevelopment) {
+        console.log('MODO DESARROLLO: La función serverless no está disponible localmente, usando alternativa');
+        toast.loading('Procesando tu solicitud...', { id: 'sending' });
+        
+        // SOLUCIÓN ALTERNATIVA PARA DESARROLLO LOCAL
+        // Simular un pequeño retraso para dar feedback realista
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Enviar email usando nodemailer no es posible en el navegador
+        // En su lugar, ofrecemos alternativas para desarrollo
+        
+        // Opción 1: Generar un mailto: link
+        const subject = encodeURIComponent(`Nueva postulación de ${data.name}`);
+        const body = encodeURIComponent(`Nombre: ${data.name}\nEmail: ${data.email}\nTeléfono: ${data.phone}\n\nNota: El CV debe ser enviado por separado desde el desarrollo local.`);
+        window.open(`mailto:web@inforce-seguridad.com.ar?subject=${subject}&body=${body}`, '_blank');
+        
+        // Simular éxito
+        console.log('MODO DESARROLLO: Se abrió el cliente de correo local');
+        toast.success('En desarrollo: Se ha abierto tu cliente de correo. Para envíos reales, usa el entorno de producción.', { id: 'sending', duration: 8000 });
+        
+        // Resetear formulario
+        reset();
+        setFileName('');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        setIsSubmitting(false);
+        return; // Salir de la función, no continuar con el envío real
+      } else {
+        toast.loading('Enviando solicitud...', { id: 'sending' });
+      }
       
-      toast.success('¡Redirigiendo a WhatsApp! Recuerda enviar tu CV por separado.');
+      console.log('Datos:', {
+        nombre: data.name,
+        email: data.email,
+        telefono: data.phone,
+        archivo: file.name,
+        tamaño: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+        tipo: file.type
+      });
+      
+      try {
+        // En producción: Enviar a la función serverless
+        console.log('MODO PRODUCCIÓN: Enviando datos a la función serverless...');
+        const response = await fetch(NETLIFY_FUNCTION_URL, { 
+          method: 'POST', 
+          body: formData 
+        });
+        
+        console.log('Respuesta HTTP:', {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries([...response.headers.entries()])
+        });
+        
+        // Obtener el texto completo de la respuesta para diagnóstico
+        const responseText = await response.text();
+        console.log('Respuesta (texto):', responseText);
+        
+        // Intentar parsear como JSON si es posible
+        let result;
+        try {
+          result = JSON.parse(responseText);
+          console.log('Respuesta (JSON):', result);
+        } catch (parseError) {
+          console.error('Error al parsear JSON:', parseError);
+          result = {};
+        }
+        
+        if (!response.ok || !result.ok) {
+          throw new Error(result?.error || `Error al enviar (${response.status}): ${responseText || response.statusText}`);
+        }
+      } catch (fetchError) {
+        console.error('Error en fetch:', fetchError);
+        throw fetchError;
+      }
+
+      // Éxito
+      console.log('Formulario enviado con éxito');
+      toast.success('¡Gracias por tu postulación! Te contactaremos pronto.', { id: 'sending', duration: 5000 });
+      
+      // Resetear el formulario
       reset();
       setFileName('');
       if (fileInputRef.current) fileInputRef.current.value = '';
+      
     } catch (error: any) {
-      console.error('Error:', error);
-      toast.error(error?.message || 'Hubo un error al procesar el formulario.');
+      console.error('Error al enviar formulario:', error);
+      
+      // Mensajes de error específicos según el tipo de error
+      if (error.message?.includes('CORS')) {
+        toast.error('Error de conexión al servidor. Por favor, intenta más tarde.', { id: 'sending', duration: 5000 });
+      } else if (error.message?.includes('NetworkError')) {
+        toast.error('Problema de red. Verifica tu conexión a internet.', { id: 'sending', duration: 5000 });
+      } else if (error.message?.includes('timeout')) {
+        toast.error('La conexión tomó demasiado tiempo. Intenta nuevamente.', { id: 'sending', duration: 5000 });
+      } else {
+        toast.error(
+          `${error?.message || 'Hubo un error al enviar tu CV'}. Por favor, intenta nuevamente o contáctanos directamente.`, 
+          { id: 'sending', duration: 5000 }
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b bg-white py-12">
@@ -146,7 +259,8 @@ Nota: El CV debe ser enviado por separado ya que WhatsApp no permite adjuntar ar
                   type="tel"
                   {...register('phone', { required: true })}
                   className="text-gray-700 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                  disabled={isSubmitting}                />
+                  disabled={isSubmitting}
+                />
                 {errors.phone && <span className="text-red-500 text-sm">Este campo es requerido</span>}
               </div>
 
@@ -180,6 +294,13 @@ Nota: El CV debe ser enviado por separado ya que WhatsApp no permite adjuntar ar
                 {errors.cv && <span className="text-red-500 text-sm">El CV es requerido</span>}
                 <p className="text-xs text-gray-500 mt-1">
                   Formatos permitidos: PDF, DOC, DOCX. Tamaño máx: {MAX_MB} MB.
+                </p>
+              </div>
+              
+              <div className="mt-4">
+                <p className="text-xs text-gray-500 mt-2">
+                  Al enviar este formulario, aceptas que tus datos sean procesados para participar en nuestros procesos de selección.
+                  Tu CV será procesado únicamente a través de esta vía oficial.
                 </p>
               </div>
 
