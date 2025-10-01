@@ -115,12 +115,12 @@ const Services = () => {
 
             {/* Botón de asesor - Oculto en banner 1 */}
             {slide.image !== "/monitoreo.png" && slide.image !== "/monitoreo.png" && (
-              <div className="absolute right-[50px] md:right-[210px] bottom-15 md:bottom-20 z-20">
+              <div className="absolute right-4 md:right-8 lg:right-12 bottom-4 md:bottom-6 lg:bottom-8 z-20 hidden md:block">
                 <a
                   href="https://wa.me/5493513584999"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-15 px-8 py-5 
+                  className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-3 lg:px-5 lg:py-3 
                             bg-gradient-to-r from-[#014fca] to-[#0056d6] 
                             text-white font-semibold rounded-xl shadow-2xl 
                             hover:shadow-lg hover:shadow-blue-500/50 
@@ -129,7 +129,7 @@ const Services = () => {
                             backdrop-blur-sm border border-white/20"
                 >
                   <div className="text-left">
-                    <p className="text-sm font-bold leading-tight">
+                    <p className="text-xs font-bold leading-tight whitespace-nowrap">
                       Comunicate con un asesor
                     </p>
                   </div>
@@ -221,12 +221,20 @@ const Services = () => {
 
             {/* Imagen ilustrativa */}
             <div className="flex items-center justify-center">
-              <div className=" duration-300">
+              <div className="   duration-300 hover:scale-105">
                 <img
-                  src="/service/ss1.png"
+                  src="/service/im.jpg"
                   alt="Seguridad Física"
-                  className="w-full h-auto object-contain max-h-80 rounded-xl"
+                    className="w-[350px] h-[350px] object-cover rounded-full mx-auto"
                 />
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-600 font-medium">
+                    Protección y Prevención INFORCE
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Planificación estratégica personalizada
+                  </p>
+                </div>
               </div>
             </div>
           </div>

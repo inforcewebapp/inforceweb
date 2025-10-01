@@ -20,7 +20,16 @@ const mobileSlides: Slide[] = [
     link: "/services",
     scrollTo: "serviciosinfo",
   },
-
+  {
+    image: "/5.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
+  },
+  {
+    image: "/6.png",
+    link: "/services",
+    scrollTo: "serviciosinfo",
+  },
 ];
 
 const desktopSlides: Slide[] = [
@@ -104,7 +113,7 @@ const Home = () => {
 
         {/* Botón de asesor - Oculto en banner 1 y 4 */}
         {slide.image !== "/monitoreo.png" && slide.image !== "/monitoreo.png" && (
-          <div className="absolute right-4 md:right-8 lg:right-12 bottom-4 md:bottom-6 lg:bottom-8 z-20">
+          <div className="absolute right-4 md:right-8 lg:right-12 bottom-4 md:bottom-6 lg:bottom-8 z-20 hidden md:block">
             <a
               href="https://wa.me/5493513584999"
               target="_blank"
