@@ -89,7 +89,7 @@ const Services = () => {
       {/* Banner Carousel - Mismo estilo que Home */}
       <div
          className={`relative w-full overflow-hidden ${
-    isMobile ? "mt-[75px]" : "mt-[50px]"
+    isMobile ? "mt-[45px]" : "mt-[50px]"
         }`}
       >
         <div className="aspect-[3/1] md:aspect-[30/9] lg:aspect-[14/4] max-h-[80vh]">

@@ -29,7 +29,7 @@ const Header: React.FC = () => {
       isServicesPage 
         ? 'bg-gradient-to-r from-[#2a3446] via-[#2a3446] to-[#1e2936] shadow-2xl' 
         : 'bg-gradient-to-r from-[#014fca] via-[#0056d6] to-[#003db3] shadow-2xl'
-    } h-[20vh] md:h-auto`}>
+    } h-[15vh] md:h-auto`}>
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -37,7 +37,7 @@ const Header: React.FC = () => {
             <img 
               src={isServicesPage ? "/logo-azul.png" : "/logo.png"}
               alt="INFORCE SEGURIDAD"
-              className="max-h-[14vh] md:max-h-20 w-auto object-contain mx-auto transition-all duration-300 hover:scale-105 drop-shadow-lg"
+              className="max-h-[10vh] md:max-h-20 w-auto object-contain mx-auto transition-all duration-300 hover:scale-105 drop-shadow-lg"
             />
           </Link>
 
