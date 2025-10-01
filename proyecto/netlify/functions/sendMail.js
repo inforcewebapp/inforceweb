@@ -1,9 +1,5 @@
 import nodemailer from "nodemailer";
 import parser from "lambda-multipart-parser";
-import dotenv from 'dotenv';
-
-// Cargar variables de entorno (solo afecta desarrollo local)
-dotenv.config();
 
 export const handler = async (event) => {
   console.log("✅ Function triggered:", event.httpMethod);
