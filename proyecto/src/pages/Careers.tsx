@@ -97,8 +97,7 @@ const Careers: React.FC = () => {
       formData.append('email', data.email);
       formData.append('telefono', data.phone ?? '');
       // Enviamos el archivo con AMBOS nombres para asegurar compatibilidad
-      formData.append('file', file, file.name); // Para lambda-multipart-parser
-      formData.append('cv', file, file.name);   // Por si el backend espera este nombre
+      formData.append('file', file, file.name); // Este es el nombre que espera lambda-multipart-parser
 
       console.log('Enviando formulario a la función serverless de Netlify...');
       console.log('URL:', NETLIFY_FUNCTION_URL);
@@ -147,7 +146,7 @@ const Careers: React.FC = () => {
         // En producción: Enviar a la función serverless
         console.log('MODO PRODUCCIÓN: Enviando datos a la función serverless...');
         const response = await fetch(NETLIFY_FUNCTION_URL, { 
-          method: 'POST', 
+          method: 'POST',
           body: formData 
         });
         
