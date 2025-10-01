@@ -20,16 +20,6 @@ const mobileSlides: Slide[] = [
     link: "/services",
     scrollTo: "serviciosinfo",
   },
-  {
-    image: "/5.png",
-    link: "/services",
-    scrollTo: "serviciosinfo",
-  },
-  {
-    image: "/6.png",
-    link: "/services",
-    scrollTo: "serviciosinfo",
-  },
 ];
 
 const desktopSlides: Slide[] = [
@@ -74,20 +64,28 @@ const Home = () => {
   }, [location]);
 
   const slides = isMobile ? mobileSlides : desktopSlides;
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
+  const nextSlide = () => {
+    // Solo cambiar el slide si hay más de uno
+    if (slides.length > 1) {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000);
-    return () => clearInterval(interval);
+    // Solo configurar el temporizador si hay más de un slide
+    if (slides.length > 1) {
+      const interval = setInterval(() => {
+        nextSlide();
+      }, 5000);
+      return () => clearInterval(interval);
+    }
   }, [slides.length]);
 
   return (
     <div className="min-h-screen">
   <div
   className={`relative w-full overflow-hidden ${
-    isMobile ? "mt-[75px]" : "mt-[50px]"
+    isMobile ? "mt-[45px]" : "mt-[50px]"
   }`}
 >
   <div className="aspect-[3/1] md:aspect-[30/9] lg:aspect-[14/4] max-h-[80vh]">
