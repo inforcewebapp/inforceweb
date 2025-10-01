@@ -1,7 +1,11 @@
 import nodemailer from "nodemailer";
 import parser from "lambda-multipart-parser";
+import dotenv from 'dotenv';
 
-export async function handler(event) {
+// Cargar variables de entorno (solo afecta desarrollo local)
+dotenv.config();
+
+export const handler = async (event) => {
   console.log("✅ Function triggered:", event.httpMethod);
 
   // --- CORS ---
@@ -28,7 +32,7 @@ export async function handler(event) {
     console.log("✅ [#1] Parseando multipart con lambda-multipart-parser");
     const { files = [], ...fields } = await parser.parse(event);
     console.log("👉 Fields recibidos:", fields);
-    console.log("👉 Files recibidos:", files.map(f => f.filename));
+    console.log("👉 Files recibidos:", files.map(f => f.filename || 'sin nombre'));
 
     // --- Paso 2: configurar transporter ---
     console.log("✅ [#2] Configurando transporter con host:", process.env.SMTP_HOST);
@@ -52,11 +56,17 @@ export async function handler(event) {
 
     // --- Paso 4: enviar email ---
     console.log("✅ [#3] Enviando email...");
+    console.log("👉 Config email:", { 
+      from: process.env.FROM_EMAIL || process.env.SMTP_USER,
+      to: process.env.TO_EMAIL || process.env.SMTP_USER,
+      replyTo: fields.email
+    });
+    
     const info = await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: process.env.SMTP_USER, // o el destino final
+      from: process.env.FROM_EMAIL || process.env.SMTP_USER,
+      to: process.env.TO_EMAIL || process.env.SMTP_USER, 
       subject: `Nueva postulación de ${fields.nombre || "Sin nombre"}`,
-      text: `Email: ${fields.email}\nTel: ${fields.telefono}`,
+      text: `Email: ${fields.email || 'No proporcionado'}\nTel: ${fields.telefono || 'No proporcionado'}`,
       attachments,
       replyTo: fields.email || undefined,
     });
@@ -74,7 +84,8 @@ export async function handler(event) {
     console.error("🔥 [#ERR] ERROR en sendMail:", err);
     return {
       statusCode: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ ok: false, error: err.message }),
     };
   }
-}
+};
