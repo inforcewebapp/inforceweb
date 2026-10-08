@@ -10,11 +10,13 @@ import Quote from './pages/Quote';
 import Contact from './pages/Contact';
 import WhatsAppButton from './components/WhatsAppButton';
 import ScrollToTop from './components/ScrollToTop';
+import MetaPixelPageView from './components/MetaPixelPageView';
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
+      <MetaPixelPageView />
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow pt-16">
